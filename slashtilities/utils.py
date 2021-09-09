@@ -22,7 +22,7 @@ async def get_last_message_from(
         if isinstance(context, SlashContext):
             output = await asyncio.wait_for(
                 context.channel.history(limit=None).get(author__id=context.author.id),
-                timeout=10.0,
+                timeout=30.0,
             )  # Timeout after 10 seconds
         else:
             async for message in context.channel.history(limit=None):
@@ -61,7 +61,6 @@ async def success(msg: str) -> discord.Embed:
 
 async def joke_info() -> str:
     jokes: Tuple[str, ...] = (
-        "Uses Heroku: True",
         "Is a cool bot: True",
         "Hosted on GitHub: True",
         "Implemented via Python: True",

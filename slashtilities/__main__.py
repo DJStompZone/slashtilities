@@ -1,5 +1,7 @@
 import os
 import traceback
+import keep_alive
+
 
 import discord
 from discord import Intents
@@ -8,9 +10,9 @@ from discord.ext.commands import Bot, when_mentioned_or
 # Importing the newly installed library.
 from discord_slash import SlashCommand
 
-from slashtilities import background, cogs, log, utils, settings, DB_ENABLED
+from slashtilities import cogs, log, utils
 
-TOKEN = os.environ["DISCORD_TOKEN"]
+TOKEN = os.environ["TOKEN"]
 intents = Intents().default()
 
 bot = Bot(when_mentioned_or("/"), intents=intents)
@@ -101,15 +103,12 @@ async def on_slash_command_error(ctx, exception):
     to_send = (
         discord.Embed(
             title=":boom: CRITICAL!!!",
-            description="😱 AHHHHHHH!!! AN ***UNCAUGHT EXCEPTION!!!***",
+            description="😱 AHHHHHHH!!! SHITFUCK! AN ***UNCAUGHT EXCEPTION!!!***",
             color=discord.Color.red(),
         )
         .add_field(
             name=":bug: You should tell us about this",
-            value="Go to the "
-            "[issue tracker](https://github.com/ThatXliner/slashtilities/issues) to do that.\n"
-            "Make sure to screenshot/link/keep this message because "
-            "the information below is very valuable for debugging.",
+            value="Show this to Salvo",
         )
         .add_field(
             name="Exception", value="```py\n" + repr(exception) + "\n```", inline=False
@@ -148,9 +147,8 @@ async def on_slash_command_error(ctx, exception):
         try:
             await ctx.channel.send(
                 (
-                    "😱 AHHHHHHH!!! AN ***UNCAUGHT EXCEPTION!!!***\n"
-                    ":bug: You should tell us about this\n"
-                    "Go to the [issue tracker](https://github.com/ThatXliner/slashtilities/issues) to do that.\n"
+                    "😱 AHHHHHHH!!! FUCK SHIT! AN ***UNCAUGHT EXCEPTION!!!***\n"
+                    ":bug: You should tell Salvo about this\n"
                     "Make sure to screenshot/link/keep this message because "
                     "the information below is very valuable for debugging.\n\n"
                     "Traceback:\n"
@@ -180,13 +178,12 @@ async def on_slash_command_error(ctx, exception):
 #     return None
 
 
-bot.add_cog(cogs.Meta(bot))
+# bot.add_cog(cogs.Meta(bot))
 bot.add_cog(cogs.Polling(bot))
+# bot.add_cog(cogs.CCing(bot))
 bot.add_cog(cogs.Misc(bot))
-bot.add_cog(background.MetaTasks(bot))
-bot.add_cog(cogs.CCing(bot))
-if DB_ENABLED:
-    bot.add_cog(settings.Settings(bot))
+# bot.add_cog(background.MetaTasks(bot))
+# bot.add_cog(settings.Settings(bot))
 # Commented out because should be a mod-only command
 # @slash.slash(
 #     name="purge",
@@ -207,4 +204,5 @@ if DB_ENABLED:
 
 
 if __name__ == "__main__":
-    bot.run(TOKEN)
+    keep_alive.keep_alive()
+    bot.run(os.environ['TOKEN'])

@@ -1,5 +1,4 @@
 import importlib
-
 from discord.ext import commands
 from discord.ext.commands import Cog as _Cog
 from discord_slash import cog_ext
@@ -41,12 +40,26 @@ class CogMeta(type):
 class Misc(metaclass=CogMeta):
     emoji_backup = "Back up the guild's emojis"
     igotpinged = "Get the person who pinged you ever since your last message"
-
-
-class Meta(metaclass=CogMeta):
-    invite = "Our bot's invite links!"
-    vote = "Vote for our bot here!"
-    ping = "Return the latency of the bot"
+    pyfu = {
+        "options": [
+            create_option(
+                "inputlink",
+                "Direct link to the target image",
+                option_type=SlashCommandOptionType.STRING,
+                required=True,
+              ),
+        ],
+    }
+    snooze = {
+        "options": [
+            create_option(
+                "inputurl",
+                "Direct link to the target image.",
+                option_type=SlashCommandOptionType.STRING,
+                required=True,
+              ),
+        ],
+    }
 
 
 class Polling(metaclass=CogMeta):
@@ -72,12 +85,3 @@ class CCing(metaclass=CogMeta):
     bcc = {
         "options": ccing.create_person_options(10),
     }
-
-
-# class Meta(Cog):
-#     @cog_ext.cog_slash(name="vote", description="Vote for our bot here!")
-#     async def slash_invite(self, ctx, *args, **kwargs) -> None:
-#         await meta.invite(ctx, *args, **kwargs)
-#
-#     async def invite(self, ctx, *args, **kwargs) -> None:
-#         await meta.invite(ctx, *args, **kwargs)

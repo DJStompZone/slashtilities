@@ -79,7 +79,7 @@ async def poll(
                 await utils.errorize(
                     "I could not add the nessecary reactions to the poll above"
                 )
-            ).set_footer(text="Gimmei perms now")
+            ).set_footer(text="Gimme perms now")
         )
     else:
         log.info("Add reactions!")
@@ -125,7 +125,7 @@ async def yesno(
         except asyncio.TimeoutError:
             await utils.send_hidden_message(
                 ctx,
-                "You didn't specify a question, and I tried to find your last message but it took too long",
+                "You didn't specify a question, and I tried to find your last message, but it took too long, so fuck you",
             )
         else:
             if question is None:
@@ -166,9 +166,9 @@ async def yesno(
             ctx.channel.send(
                 embed=(
                     await utils.errorize(
-                        "I could not add the nessecary reactions to the poll above"
+                        "Shit. I could not add the nessecary reactions to the poll above"
                     )
-                ).set_footer(text="Gimmei perms now")
+                ).set_footer(text="Gimme perms now")
             )
         else:
             log.info("Added reactions!")

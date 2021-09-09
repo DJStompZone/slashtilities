@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord_slash.model import SlashCommandOptionType
 from discord_slash.utils.manage_commands import create_option
 
-from slashtilities import db, utils, DB_ENABLED
+from slashtilities import utils
 
 
 async def cc(self, ctx: commands.Context, **users) -> None:
@@ -103,8 +103,6 @@ async def create_bcc_message(ctx: commands.Context, _, from_message, to):
         )
         .set_footer(
             text="Run `/settings set should_dm false` to stop getting dm notifications"
-            if DB_ENABLED
-            else "how's life?"
         )
     )
 
@@ -136,8 +134,6 @@ async def create_cc_message(ctx: commands.Context, other_people, from_message, t
         )
         .set_footer(
             text="Run `/settings set should_dm false` to stop getting dm notifications"
-            if DB_ENABLED
-            else "how's life?"
         )
     )
 

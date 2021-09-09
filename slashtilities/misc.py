@@ -1,9 +1,14 @@
 import asyncio
 import shutil
 import tempfile
+import requests
+from time import sleep
+import os
+openAI = {'api-key': os.environ['OpenAI']}
 from collections import defaultdict
 from pathlib import Path
 from typing import DefaultDict, List
+import random
 
 import discord
 from discord.ext import commands
@@ -70,7 +75,7 @@ async def emoji_backup(self, ctx: commands.Context):
                         description=(
                             f":white_check_mark: Downloaded {emoji_length} emojis\n"
                             ":white_check_mark: Zipping emojis\n"
-                            ":x: Cannot send emojis\n"
+                            ":x: Ahh shit. Cannot send emojis\n"
                         ),
                         color=discord.Color.green(),
                     ).add_field(
@@ -110,6 +115,96 @@ async def make_list(stuff: List[str]) -> str:
     return output
 
 
+
+async def snooze(self, ctx: commands.Context, *args) -> None:
+    """Use the power of AI and the sorcerry of Snek to make your image trippy"""
+    embed = discord.Embed(title="Here you go!", description="Trippy, right?")
+    rslt = 'https://i.imgur.com/0sJSMrZ.jpg'
+    filetype = '.jpg'
+    r = requests.post(
+        "https://api.deepai.org/api/deepdream",
+        data={'image':ctx.args[0]},
+        headers=openAI
+    )
+    rstatus = True
+    while rstatus:
+      if r.status_code == 200:
+        rslt = r.json().get('output_url')
+        rstatus=0
+      elif r.status_code > 399:
+        rslt = 'https://i.imgur.com/0sJSMrZ.jpg'
+        rstatus=0
+      else:
+        print("Sleeping 5, http status currently "+str(r.status_code))
+        sleep(5)
+    identifier = random.randint(10000,99999)
+    if rslt[-4] == ".":
+      filetype = rslt[-4:]
+    filename = "outpt"+str(identifier)+filetype
+    rs = requests.get(rslt, stream=True)
+    rstat = True
+    while rstat:
+      if rs.status_code == 404:
+        await ctx.send(content="https://i.imgur.com/0sJSMrZ.jpg")
+        rstat=0
+        return
+      elif rs.status_code == 200:
+        rstat = 0
+      else: sleep(5)
+    with open(filename, 'wb') as fp:
+      shutil.copyfileobj(rs.raw, fp)
+      fp.close()
+    fp = open(filename, 'rb')
+    file=discord.File(fp, filename)
+    embed.set_image(url="attachment://"+filename)
+    await ctx.send(embed=embed, file=file)
+    fp.close()
+
+async def pyfu(self, ctx: commands.Context, *args) -> None:
+    """Use the power of AI and the sorcerry of Snek to enhance your image"""
+    embed = discord.Embed(title="Here you go!", description="Bigger, right?")
+    rslt = 'https://i.imgur.com/0sJSMrZ.jpg'
+    filetype = '.jpg'
+    r = requests.post(
+        "https://api.deepai.org/api/waifu2x",
+        data={'image':ctx.args[0]},
+        headers=openAI
+    )
+    rstatus = True
+    while rstatus:
+      if r.status_code == 200:
+        rslt = r.json().get('output_url')
+        rstatus=0
+      elif r.status_code == 404:
+        rslt = 'https://i.imgur.com/0sJSMrZ.jpg'
+        rstatus=0
+      else:
+        print("Sleeping 5, http status currently "+str(r.status_code))
+        sleep(5)
+    identifier = random.randint(10000,99999)
+    if rslt[-4] == ".":
+      filetype = rslt[-4:]
+    filename = "outpt"+str(identifier)+filetype
+    rs = requests.get(rslt, stream=True)
+    rstat = True
+    while rstat:
+      if rs.status_code == 404:
+        await ctx.send(content="https://i.imgur.com/0sJSMrZ.jpg")
+        rstat=0
+        return
+      elif rs.status_code == 200:
+        rstat = 0
+      else: sleep(5)
+    with open(filename, 'wb') as fp:
+      shutil.copyfileobj(rs.raw, fp)
+      fp.close()
+    fp = open(filename, 'rb')
+    file=discord.File(fp, filename)
+    embed.set_image(url="attachment://"+filename)
+    await ctx.send(embed=embed, file=file)
+    fp.close()
+
+
 async def igotpinged(self, ctx: commands.Context) -> None:
     """Get the person who pinged you ever since your last message"""
     log.info("START OF `igotpinged`")
@@ -126,7 +221,7 @@ async def igotpinged(self, ctx: commands.Context) -> None:
             embed=(
                 await utils.errorize(
                     "How do you expect me to find your last message if "
-                    "I don't even have access to this channel???",
+                    "I don't even have access to this channel??? Dumbass!",
                 )
             ).set_footer(text="What an idiot")
         )
@@ -148,7 +243,7 @@ async def igotpinged(self, ctx: commands.Context) -> None:
             await ctx.send(
                 embed=(
                     await utils.errorize(
-                        "Couldn't find your last message (maybe you didn't send any messages)"
+                        "Couldn't find your last message (maybe you didn't send any messages?)"
                     )
                 )
             )
@@ -216,9 +311,9 @@ async def igotpinged(self, ctx: commands.Context) -> None:
                     ctx.channel.send(
                         embed=await utils.errorize(
                             "Oi, I cannot remove your reactions.\n"
-                            "Gimmei `Manage Messages` permission."
+                            "Gimme `Manage Messages` permission."
                         ).set_footer(
-                            text="If you need to re-invite the bot, use the `/invite` command"
+                            text="If you need to re-invite the bot, use the `/invite` command (Jk don`t)"
                         )
                     )
                 log.info("Success!")
@@ -243,7 +338,7 @@ async def igotpinged(self, ctx: commands.Context) -> None:
                     title=":ghost: Not found!",
                     description=f"I didn't find anyone. You probably got ***ghost pinged***\n\n[**Your last message**]({last_msg.jump_url})",
                     color=discord.Color.red(),
-                ).set_footer(text="Imagine ghost pinging")
+                ).set_footer(text="Imagine ghost pinging smh")
             )
             log.info("Success!")
     log.info("END OF `igotpinged`")

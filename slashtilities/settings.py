@@ -86,12 +86,6 @@ class Settings(commands.Cog):
                             f"{to} is an invalid value for {setting_name}"
                         )
                     )
-                except RuntimeError:
-                    await ctx.send(
-                        embed=await utils.errorize(
-                            "Slashtilities is currently running without settings support"
-                        )
-                    )
                 else:
                     await ctx.send(
                         embed=await utils.success(
